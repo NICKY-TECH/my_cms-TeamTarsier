@@ -1,6 +1,6 @@
 const path=require('path');
 
-require('dotenv').config(path.join(__dirname,'..','.env'));
+require('dotenv').config();
 
 const mongoose=require('mongoose');
  

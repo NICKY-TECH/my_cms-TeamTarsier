@@ -8,22 +8,35 @@ const {validationResult}=require('express-validator');
 
 // the register function allows a user register without a sign on service like google
 
-async function register(req,res){
+async function registerWithMaisout(req,res){
 const {email,username,password}=req.body;
 user.findOne({emailAddress:email}, async function(error,result){
     if(error){
        res.status(500).json({
-        message:'an error occurred while processing your request'
+        success:false,
+        error:[],
+        message:'an error occurred while processing your request',
+        data:{}
        })
     }else if(result){
-       return res.status(403).json('A user with this email already exists')
+       return res.status(400).json({
+        success:false,
+        error:[],
+        message:'A user with this email already exists',
+        data:{}
+    })
 
       
        
         }else if(!result){
            const errors=validationResult(req);
            if(!errors.isEmpty()){
-            res.status(403).json(errors.array());
+            res.status(400).json({
+                success:false,
+                error:errors.array(),
+                message:"Invalid input",
+                data:{}
+            });
 
            }else{
             const passwordString=password.toString();
@@ -34,9 +47,8 @@ user.findOne({emailAddress:email}, async function(error,result){
                 emailAddress:email,
                 password:hashed
             })
-            // tokenCreation(newUser._id);
-            // console.log(newUser._id);
-            res.json(tokenCreation(newUser._id));
+            req.session.userId=newUser._id;
+            res.redirect('/maisout/userdashboard');
            }
         }
         })
@@ -47,5 +59,5 @@ user.findOne({emailAddress:email}, async function(error,result){
 
 
 module.exports={
-    register
+    registerWithMaisout
 }

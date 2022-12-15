@@ -17,12 +17,21 @@ user.findOne({username:username},function(error,foundUser){
                     message:"invalid user details"
                 })
             }else if(matched){
+                req.session.userId=matched._id;
+                res.redirect('/maisout/userdashboard');
                 res.status(200).json({
-                    message:"you have been logged In successfully"
+                    success:true,
+                    error:[],
+                    message:"you have been logged In successfully",
+                    data:{}
                 })
             }
         })
 
     }
 })
+}
+
+async function logInWithGoogle(){
+
 }
